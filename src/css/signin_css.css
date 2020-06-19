@@ -1,0 +1,12 @@
+.bg-gradient-primary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: cursive;
+  /* background-color: blue; */
+  min-height: 100vh;
+}
+.errorMessage {
+  color: red;
+  font-size: 13px;
+}

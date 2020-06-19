@@ -1,0 +1,34 @@
+.season_table thead tr {
+  color: rgba(43, 20, 250, 0.911);
+
+  left: 0px;
+  right: 0px;
+
+  border-bottom: 1px solid black;
+}
+.season_table tr td {
+  color: #000000;
+  padding: 10px 0px;
+}
+.season_table tbody tr td {
+  /* background-color: red; */
+  border-bottom: 1px solid rgb(189, 186, 186);
+}
+.season_table tbody tr:hover td {
+  color: rgb(70, 70, 241);
+  background-color: rgb(202, 202, 202);
+  border-bottom: 1px solid #000000;
+}
+.season_table tbody i {
+  color: rgb(38, 35, 231);
+}
+.season_table tbody i:hover {
+  /* font-size: 150%;        */
+  color: red;
+}
+.season_table {
+  width: 100%;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+}
