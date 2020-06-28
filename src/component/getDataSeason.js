@@ -6,8 +6,12 @@ import { withRouter } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; //import css confirm
-///add popup
-import Popup from "reactjs-popup";
+import moment from "moment";
+
+///add datepicker
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+
 class getDataSeason extends Component {
   constructor(props) {
     super(props);
@@ -17,121 +21,153 @@ class getDataSeason extends Component {
       namePlan: "",
       area: "",
       loaiCay: "",
+      dateStart: new Date(),
+      dateEnd: new Date(),
     };
   }
   componentDidMount = () => {
     const user = firebase.auth().currentUser;
-    const _getDta = firebase
+    this.unsubscribe = firebase
       .firestore()
       .collection("season")
       .where("ownerId", "==", user.uid)
-      .get()
-      .then((season) => {
-        season.forEach((items) => {
-          const _data = this.state.data;
-          if (items.data().del === false) {
-            _data.push({ id: items.id, ...items.data() });
-            //   _data.push(items);
-            // console.log("alooo", _data);
-
-            this.setState({
-              data: _data,
-            });
-            // console.log("item delete false");
-          } else {
-            // console.log("item delete true");
+      .where("del", "==", false)
+      .onSnapshot((snapshot) => {
+        this.props.setTotalSeason(snapshot.size); ///count row data
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            ///change state add
+            // console.log("added", change.doc.id);
+            this.setState((prevState) => ({
+              data: [
+                ...prevState.data,
+                { id: change.doc.id, ...change.doc.data() },
+              ],
+            }));
+          }
+          if (change.type === "modified") {
+            ///change state update
+            // console.log("Modified", change.doc.id);
+            this.setState((prevState) => ({
+              data: prevState.data.map((season) => {
+                if (season.id === change.doc.id) {
+                  return { id: change.doc.id, ...change.doc.data() };
+                }
+                return season;
+              }),
+            }));
+          }
+          if (change.type === "removed") {
+            ///change state delete
+            // console.log("Removed", change.doc.id);
+            this.setState((prevState) => ({
+              data: prevState.data.filter(
+                (season) => season.id !== change.doc.id
+              ),
+            }));
           }
         });
       });
   };
+
+  //cancel subcribe change data
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  ///convet date
   _getDate = (e) => {
-    let _date = new Date(e);
-    let _getY = _date.getFullYear();
-    let _getM = _date.getMonth() + 1;
-    let _getD = _date.getDay();
-    let _datetime = _getY + "/" + _getM + "/" + _getD;
-    return _datetime;
+    return moment(typeof e === "object" ? e.seconds * 1000 : e).format(
+      "DD/MM/YYYY"
+    );
   };
+  ///open component add jobs and send parameter ID season
   onHandleAdd = (e) => {
-    return this.props.history.push(ROUTES.EDITANY);
+    return this.props.history.push(ROUTES.EDITANY_V + e);
   };
+
+  //set state val input
   onHandleChane = (e) => {
     const { name, value } = e.target;
     this.setState({
       [name]: value,
     });
   };
-  //delete mùa vụ
+  //delete season
   onHandleDel = (e) => {
     confirmAlert({
+      ///open popup confirm del season
       title: "Xác nhận xóa",
       message: "Bạn có muốn xóa:" + e.namePlan,
       buttons: [
         {
           label: "CÓ",
           onClick: () => {
-            firebase
-              .firestore()
-              .collection("season")
-              .doc(e.id)
-              .update({
-                del: true,
-              })
-
-              .then(window.location.reload());
+            firebase.firestore().collection("season").doc(e.id).update({
+              del: true,
+            });
           },
         },
         {
           label: "Không",
-          // onClick: () => alert("Click No"),
         },
       ],
     });
   };
-  ///hiển thị form chỉnh sửa
+  ///open form edit season
   onHandleEdit = (e) => {
     this.setState({
       namePlan: e.namePlan,
       area: e.area,
       loaiCay: e.tree,
       id: e.id,
+      dateStart: e.dateStart,
+      dateEnd: e.dateEnd,
     });
+    // console.log("sua");
     let el = document.getElementById("edit");
-    if (el.style.display === "none") {
-      el.style.display = "block";
-    } else {
-      el.style.display = "none";
-    }
-    // _namePlan.value = e.namePlan;
+    el.style.display = "block";
   };
-
-  ///đóng phần chỉnh sửa
+  ///set date edit
+  handlePickerDate = (e, value) => {
+    if (value === 0) {
+      let _getDate = new Date(e);
+      this.setState({
+        dateStart: _getDate.getTime(),
+      });
+    }
+    if (value === 1) {
+      let _getDate = new Date(e);
+      this.setState({
+        dateEnd: _getDate.getTime(),
+      });
+    }
+  };
+  ///Close form edit season
   onHandleClose = () => {
     let close = document.getElementById("edit");
     close.style.display = "none";
   };
+  //handle button update season
   onHandleUpdateSeason = (e) => {
     e.preventDefault();
-    firebase
-      .firestore()
-      .collection("season")
-      .doc(this.state.id)
-      .update({
-        namePlan: this.state.namePlan,
-        area: this.state.area,
-        tree: this.state.loaiCay,
-      })
-      .then(window.location.reload());
+    firebase.firestore().collection("season").doc(this.state.id).update({
+      namePlan: this.state.namePlan,
+      area: this.state.area,
+      tree: this.state.loaiCay,
+      dateStart: this.state.dateStart,
+      dateEnd: this.state.dateEnd,
+    });
+    this.onHandleClose();
   };
   render() {
     const { data } = this.state;
     return (
-      <table className="season_table">
+      <table id="myTable" className="season_table">
         <thead>
           <tr>
             <th> Tên mùa vụ</th>
-            <th>Diện tích</th>
-            <th> Loại cây</th>
+            <th>Diện tích / số lượng</th>
+            <th>Cây trồng / vât nuôi</th>
 
             <th>thời gian bắt đầu</th>
             <th>Ngày Kết thúc</th>
@@ -152,16 +188,9 @@ class getDataSeason extends Component {
                 <td>
                   <i
                     className="fas fa-user-cog"
-                    onClick={() => this.onHandleAdd(item)}
+                    onClick={() => this.onHandleAdd(item.id)}
                   ></i>
                   &emsp;
-                  {/* <Button
-                    variant="primary"
-                    onClick={() => this.onHandleAdd(item)}
-                  >
-                    Thêm
-                  </Button>
-                  &emsp; */}
                   <Button
                     variant="warning"
                     onClick={() => this.onHandleEdit(item)}
@@ -174,12 +203,14 @@ class getDataSeason extends Component {
                         +
                       </div>
                       <br />
+                      <br />
                       <form
                         onSubmit={this.onHandleUpdateSeason}
                         className="season"
                       >
                         <div className="form-group row">
                           <div className="col-sm-6 mb-3 mb-sm-0">
+                            <label>Tên mùa vụ</label>
                             <input
                               type="text"
                               name="namePlan"
@@ -188,12 +219,12 @@ class getDataSeason extends Component {
                               value={this.state.namePlan}
                               placeholder="Tên mùa vụ"
                               onChange={this.onHandleChane}
-                              // required="Caanf"
-
                               noValidate
                             />
                           </div>
                           <div className="col-sm-6">
+                            <label>Diện tích / số lượng</label>
+
                             <input
                               name="area"
                               type="number"
@@ -208,6 +239,8 @@ class getDataSeason extends Component {
                         </div>
                         <div className="form-group row">
                           <div className="col-sm-6 mb-3 mb-sm-0">
+                            <label>Cây trồng vật nuôi</label>
+
                             <input
                               type="text"
                               name="loaiCay"
@@ -221,23 +254,25 @@ class getDataSeason extends Component {
                           </div>
                         </div>
                         <div className="form-group row">
-                          <div className="col-sm-12 mb-3 mb-sm-0">
-                            <span>Ngày bắt đầu</span>
-                            {/* <DatePicker
-                              format="dd-MM-yyyy"
+                          <div className="col-sm-6 mb-3 mb-sm-0">
+                            <span>Ngày bắt đầu </span>
+                            <DatePicker
+                              className="form-control form-control-user"
+                              dateFormat="dd/MM/yyyy"
                               locale="vi"
                               selected={this.state.dateStart}
                               onChange={(e) => this.handlePickerDate(e, 0)}
-                            /> */}
+                            />
                           </div>
-                          <div className="col-sm-12 mb-3 mb-sm-0">
-                            <span>Ngày kết thúc</span>
-                            {/* <DatePicker
-                              format="dd-MM-yyyy"
+                          <div className="col-sm-6 mb-3 mb-sm-0">
+                            <span>Ngày kết thúc </span>
+                            <DatePicker
+                              className="form-control form-control-user"
+                              dateFormat="dd/MM/yyyy"
                               locale="vi"
                               selected={this.state.dateEnd}
                               onChange={(e) => this.handlePickerDate(e, 1)}
-                            /> */}
+                            />
                           </div>
                         </div>
 
@@ -250,27 +285,6 @@ class getDataSeason extends Component {
                       </form>
                     </div>
                   </div>
-                  {/* <Popup
-                    trigger={
-                      <Button
-                        variant="warning"
-                        onClick={() => this.onHandleEdit(item)}
-                      >
-                        Sửa
-                      </Button>
-                    }
-                    position="right center"
-                  >
-                    <div>
-                      <h3>Chỉnh sửa thông tin mùa vụ</h3>
-                      <label>
-                        Tên mùa vụ:
-                        <input type="text" name="name" />
-                      </label>
-                      <input type="submit" value="Submit" />
-                      {item.namePlan}
-                    </div>
-                  </Popup> */}
                   &emsp;
                   <Button
                     variant="danger"

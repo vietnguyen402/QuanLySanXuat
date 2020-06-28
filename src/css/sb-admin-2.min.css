@@ -4003,8 +4003,12 @@ input[type="submit"].btn-block {
   border-bottom-left-radius: 0.35rem;
 }
 .card-body {
+  height: 100%;
   flex: 1 1 auto;
   padding: 1.25rem;
+}
+.card-body:hover {
+  cursor: pointer;
 }
 .card-title {
   margin-bottom: 0.75rem;
@@ -5870,6 +5874,9 @@ button.bg-dark:hover {
     display: table-cell !important;
   }
   .d-sm-flex {
+    padding: 0 3%;
+    color: black;
+    background-color: white;
     display: flex !important;
   }
   .d-sm-inline-flex {
@@ -8918,13 +8925,15 @@ a:focus {
   color: #b7b9cc !important;
 }
 .text-gray-600 {
-  color: #858796 !important;
+  color: #000000 !important;
 }
 .text-gray-700 {
   color: #6e707e !important;
 }
 .text-gray-800 {
-  color: #5a5c69 !important;
+  font-weight: bold;
+
+  color: #1f52f7 !important;
 }
 .text-gray-900 {
   color: #3a3b45 !important;

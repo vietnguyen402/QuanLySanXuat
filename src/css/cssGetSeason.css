@@ -32,3 +32,14 @@
   justify-content: space-between;
   align-items: center; */
 }
+.season_table:hover {
+  cursor: default;
+}
+.season_table i:hover {
+  cursor: pointer;
+}
+
+.editInfo {
+  background-color: white;
+  padding: 0 3% 3%;
+}
