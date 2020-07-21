@@ -34,7 +34,12 @@ class signin extends Component {
         alert("sai: " + e);
       });
   };
-  componentDidMount() {}
+  componentDidMount() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      this.props.history.replace("/");
+    }
+  }
 
   render() {
     return (
@@ -49,9 +54,7 @@ class signin extends Component {
                     <div className="col-lg-6">
                       <div className="p-5">
                         <div className="text-center">
-                          <h1 className="h4 text-gray-900 mb-4">
-                            Welcome Back!
-                          </h1>
+                          <h1 className="h4 text-gray-900 mb-4">Xin chào!</h1>
                         </div>
                         <form onSubmit={this.onHandlesubmit} className="user">
                           <div className="form-group">
@@ -83,7 +86,7 @@ class signin extends Component {
                             className="button btn btn-primary btn-user btn-block"
                             // classNameName="button"
                           >
-                            Login
+                            Đăng nhập
                           </button>
 
                           <hr />
@@ -92,12 +95,12 @@ class signin extends Component {
                         <div className="text-center">
                           {/* <a href="pwd-forget.js"> quen mk</a> */}
                           <Link to={ROUTES.PASSWORD_FORGET} className="small">
-                            Forgot Password?
+                            Quên mật khẩu?
                           </Link>
                         </div>
                         <div className="text-center">
                           <Link to={ROUTES.SIGN_UP} className="small">
-                            Create an Account!
+                            Tạo tài khoản!
                           </Link>
                         </div>
                       </div>

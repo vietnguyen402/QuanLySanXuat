@@ -69,7 +69,7 @@ class EditAny extends Component {
           }
         });
       });
-    this.getDataSeason();
+    // this.getDataSeason();
   };
   ///unsubscribe move screen
   componentWillUnmount() {
@@ -123,13 +123,13 @@ class EditAny extends Component {
       const _getDate = new Date(e);
 
       this.setState({
-        date_job: _getDate.getTime(),
+        date_job: _getDate,
       });
     }
     if (value === 1) {
       const _getDate = new Date(e);
       this.setState({
-        date_Edit: _getDate.getTime(),
+        date_Edit: _getDate,
       });
       console.log(this.state.date_Edit);
     }
@@ -167,7 +167,6 @@ class EditAny extends Component {
       expenses: e.expenses,
       date_Edit: e.date,
     });
-    console.log("1");
 
     let el = document.getElementById("form-edit");
     // if (el.style.display === "none") {
@@ -186,6 +185,7 @@ class EditAny extends Component {
 
   ///handle click submit edit
   onHandleSubmitEdit = (e) => {
+    // console.log("bug bưj");
     e.preventDefault();
     let _data = this.state;
     firebase.firestore().collection("jobs").doc(_data.id_job).update({
@@ -224,7 +224,7 @@ class EditAny extends Component {
           <div className="addJobs" onClick={this.handleAddJob}>
             {/* <div className="plus">+</div> */}
             <i className="fas fa-plus-circle fa-1x"></i> &nbsp;
-            <div>Thêm công việc</div>
+            <span>Thêm công việc</span>
           </div>
           <div className="back" onClick={this.onHandleBackHome}>
             <i className="fas fa-external-link-alt"></i>&nbsp;
@@ -288,7 +288,7 @@ class EditAny extends Component {
                           className="name form-control form-control-user"
                           id="name"
                           // value={this.state.name}
-                          placeholder="VD: Cho ăn"
+                          placeholder="VD: Chăm sóc"
                           onChange={this.onHandleChaneVal}
                           noValidate
                         />
@@ -349,8 +349,11 @@ class EditAny extends Component {
             </div>
           </div>
           <div id="form-edit">
-            <div className="mask-edit" onClick={this.handleClickMask}>
+            <div className="mask-edit">
               <div className="table-edit">
+                <div className="close_edit" onClick={this.handleClickMask}>
+                  +
+                </div>
                 <Form>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridEmail">
@@ -361,6 +364,7 @@ class EditAny extends Component {
                         placeholder="VD: Tưới cây ..."
                         value={this.state.name}
                         onChange={this.onHandleChaneVal}
+                        noValidate
                       />
                     </Form.Group>
 
@@ -372,6 +376,7 @@ class EditAny extends Component {
                         placeholder="VD: Tưới Định kỳ ..."
                         value={this.state.description}
                         onChange={this.onHandleChaneVal}
+                        noValidate
                       />
                     </Form.Group>
                   </Form.Row>
@@ -384,6 +389,7 @@ class EditAny extends Component {
                         placeholder="chi phí :VND"
                         value={this.state.expenses}
                         onChange={this.onHandleChaneVal}
+                        noValidate
                       />
                     </Form.Group>
 
@@ -396,6 +402,7 @@ class EditAny extends Component {
                         locale="vi"
                         selected={this.state.date_Edit}
                         onChange={(e) => this.handlePickerDate(e, 1)}
+                        noValidate
                       />
                     </Form.Group>
                   </Form.Row>
@@ -405,7 +412,7 @@ class EditAny extends Component {
                     variant="primary"
                     type="submit"
                   >
-                    Submit
+                    Sửa
                   </Button>
                 </Form>
               </div>

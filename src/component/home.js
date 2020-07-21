@@ -43,7 +43,6 @@ class Home extends Component {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          localStorage.setItem("data_user", JSON.stringify(doc.data()));
           const _getDataJS = JSON.stringify(Object(doc.data()));
           const _parseData = JSON.parse(_getDataJS);
           // console.log(_parseData);
@@ -64,13 +63,11 @@ class Home extends Component {
       this.setState({
         dateStart: _getDate,
       });
-      console.log("_getDate", _getDate);
     } else if (value === 1) {
       const _getDate = new Date(e);
       this.setState({
         dateEnd: _getDate,
       });
-      console.log("_getDate", _getDate);
     }
   };
 
@@ -140,6 +137,7 @@ class Home extends Component {
     }
   };
   setTotalSeason = (totalSeason) => this.setState({ totalSeason });
+  setTotalJobs = (totalJobs) => this.setState({ totalJobs });
   render() {
     return (
       <div id="page-top">
@@ -154,8 +152,8 @@ class Home extends Component {
 
               {/* <!-- End of Topbar -->
 
-    <!-- Begin Page Content --> */}
-              <div className="container-fluid">
+        <!-- Begin Page Content --> */}
+              <div>
                 {/* <!-- Page Heading --> */}
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                   <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
@@ -200,25 +198,18 @@ class Home extends Component {
                         >
                           <Link to={ROUTES.HOME} className="dropdown-item">
                             <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Profile
+                            Hồ sơ
                           </Link>
-                          <Link to={ROUTES.HOME} className="dropdown-item">
-                            <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Settings
-                          </Link>
-                          <Link to={ROUTES.HOME} className="dropdown-item">
-                            <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Activity Log
-                          </Link>
+
                           <div className="dropdown-divider"></div>
-                          <a
+                          <span
                             className="dropdown-item"
                             data-toggle="modal"
                             data-target="#logoutModal"
                           >
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
-                          </a>
+                            Đăng xuất
+                          </span>
                         </div>
                       </li>
                     </ul>
@@ -226,12 +217,12 @@ class Home extends Component {
                 </div>
 
                 {/* <!-- Content Row --> */}
-                <div className="row">
+                <div className="row container-fluid">
                   {/* <!-- Earnings (Monthly) Card Example --> */}
                   <div className="col-xl-3 col-md-6 mb-4">
                     <div className="card border-left-primary shadow h-100 py-2">
                       <div
-                        className="card-body"
+                        className="card-body add-season"
                         style={{ width: "400px !important" }}
                       >
                         <Popup
@@ -261,8 +252,6 @@ class Home extends Component {
                                     id="exampleFNamePlan"
                                     placeholder="Tên mùa "
                                     onChange={this.onHandleChane}
-                                    // required="Caanf"
-
                                     noValidate
                                   />
                                 </div>
@@ -332,11 +321,11 @@ class Home extends Component {
                   {/* <!-- Earnings (Monthly) Card Example --> */}
                   <div className="col-xl-3 col-md-6 mb-4">
                     <div className="card border-left-success shadow h-100 py-2">
-                      <div className="card-body">
+                      <div className="card-body countExpenses">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
                             <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
-                              Earnings (Annual)
+                              <h5>Tổng chi phí hiện tại</h5>
                             </div>
                             <div className="h5 mb-0 font-weight-bold text-gray-800">
                               $215,000
@@ -353,7 +342,7 @@ class Home extends Component {
                   {/* <!-- Earnings (Monthly) Card Example --> */}
                   <div className="col-xl-3 col-md-6 mb-4">
                     <div className="card border-left-info shadow h-100 py-2">
-                      <div className="card-body">
+                      <div className="card-body countSeason">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
                             <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
@@ -379,7 +368,7 @@ class Home extends Component {
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
                             <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                              Pending Requests
+                              <h5>Tổng số công việc của bạn</h5>
                             </div>
                             <div className="h5 mb-0 font-weight-bold text-gray-800">
                               {this.state.totalJobs}
@@ -394,7 +383,7 @@ class Home extends Component {
                   </div>
                 </div>
 
-                <div className="row">
+                <div className="row container-fluid">
                   <div
                     className="col-xl-12
                    col-lg-12"
@@ -421,7 +410,7 @@ class Home extends Component {
                       <div className="card-body">
                         <GetDataSeason
                           setTotalSeason={this.setTotalSeason}
-                          // setTotalJobs={this.setTotalJobs}
+                          setTotalJobs={this.setTotalJobs}
                         />
                       </div>
                     </div>
@@ -433,8 +422,8 @@ class Home extends Component {
               <div className="container my-auto">
                 <div className="copyright text-center my-auto">
                   <span>
-                    Copyright By VietNguyen <br />
-                    <br /> Your Website 2020 EMAIL: vietnguyen2698@gmail.com
+                    DEV: VietNguyen <br />
+                    <br /> Contact: vietnguyen2698@gmail.com
                   </span>
                 </div>
               </div>
@@ -454,7 +443,7 @@ class Home extends Component {
         <div
           className="modal fade"
           id="logoutModal"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -484,14 +473,14 @@ class Home extends Component {
                   type="button"
                   data-dismiss="modal"
                 >
-                  Cancel
+                  Hủy
                 </button>
                 <button
                   type="button"
                   onClick={this.onHandleLogout}
                   className=" btn btn-primary"
                 >
-                  Logout
+                  Đăng xuất
                 </button>
               </div>
             </div>

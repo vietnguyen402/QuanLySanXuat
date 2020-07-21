@@ -101,6 +101,9 @@
   color: black;
   cursor: pointer;
 }
+.addJobs span {
+  height: 100%;
+}
 /* table add */
 #tableAdd {
   justify-content: center;
@@ -173,10 +176,26 @@
 }
 .table-edit {
   padding: 5%;
+  position: absolute;
   border-radius: 15px;
   height: auto;
   width: auto;
   background-color: white;
+}
+.close_edit {
+  /* background-color: red; */
+  width: 20px;
+  height: 20px;
+  top: 0px;
+  transform: rotate(45deg);
+  right: 5px;
+  font-weight: bold;
+  font-size: 30px;
+  position: absolute;
+  color: black;
+}
+.close_edit:hover {
+  cursor: pointer;
 }
 .back {
   position: absolute;

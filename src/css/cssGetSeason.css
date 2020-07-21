@@ -43,3 +43,12 @@
   background-color: white;
   padding: 0 3% 3%;
 }
+.item-season {
+  background-color: aquamarine;
+}
+.change {
+  background-color: red !important;
+}
+.nochange {
+  background-color: aquamarine !important;
+}

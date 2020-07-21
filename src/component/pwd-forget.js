@@ -24,12 +24,12 @@ class PwdForget extends Component {
       .auth()
       .sendPasswordResetEmail(this.state.email)
       .then(function () {
-        alert("Check your email to reset password ");
+        alert("Kiểm tra email và đặt lại mật khẩu! ");
         console.log("success");
       })
       .catch(function (error) {
         if (error) {
-          alert("Email not found");
+          alert("Email không tôn tại!");
         }
         console.log("opp" + error.code);
       });
@@ -48,12 +48,11 @@ class PwdForget extends Component {
                       <div className="p-5">
                         <div className="text-center">
                           <h1 className="h4 text-gray-900 mb-2">
-                            Forgot Your Password?
+                            QUÊN MẬT KHẨU
                           </h1>
                           <p className="mb-4">
-                            We get it, stuff happens. Just enter your email
-                            address below and we'll send you a link to reset
-                            your password!
+                            Bạn đang gặp vấn đề với tài khoản!, hãy nhập email
+                            của bạn để lấy lại tài khoản!
                           </p>
                         </div>
                         <form onSubmit={this.onHandleSubmit} className="user">
@@ -72,18 +71,18 @@ class PwdForget extends Component {
                             type="submit"
                             className="button btn btn-primary btn-user btn-block"
                           >
-                            Reset Password
+                            Gửi
                           </button>
                         </form>
                         <hr />
                         <div className="text-center">
                           <Link to={ROUTES.SIGN_UP} className="small">
-                            Create an Account!
+                            Tạo Tài Khoản
                           </Link>
                         </div>
                         <div className="text-center">
                           <Link to={ROUTES.SIGN_IN} className="small">
-                            Already have an account? Login!
+                            Bạn Nhớ rồi sao? Đăng nhập!
                           </Link>
                         </div>
                       </div>

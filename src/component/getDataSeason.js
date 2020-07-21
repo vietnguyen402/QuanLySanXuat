@@ -26,6 +26,7 @@ class getDataSeason extends Component {
     };
   }
   componentDidMount = () => {
+    // this.props.setTotalJobs(99999);
     const user = firebase.auth().currentUser;
     this.unsubscribe = firebase
       .firestore()
@@ -71,11 +72,20 @@ class getDataSeason extends Component {
   };
 
   //cancel subcribe change data
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.unsubscribe();
-  }
+  };
+
   ///convet date
   _getDate = (e) => {
+    // let el = document.getElementById("item-season");
+
+    // let date_curr = new Date().getTime();
+    // if (date_curr > e) {
+    //   el.classList.add("change");
+    // } else {
+    //   el.classList.add("nochange");
+    // }
     return moment(typeof e === "object" ? e.seconds * 1000 : e).format(
       "DD/MM/YYYY"
     );
@@ -161,142 +171,151 @@ class getDataSeason extends Component {
   };
   render() {
     const { data } = this.state;
+
+    console.log(data);
     return (
-      <table id="myTable" className="season_table">
-        <thead>
-          <tr>
-            <th> Tên mùa vụ</th>
-            <th>Diện tích / số lượng</th>
-            <th>Cây trồng / vât nuôi</th>
+      <div>
+        {data.length === 0 && (
+          <h3 style={{ textAlign: "center" }}>
+            Xin chào!<br></br> Bạn Hãy tạo cho mình các mùa vụ nhé!
+          </h3>
+        )}
+        <table id="myTable" className="season_table">
+          <thead>
+            <tr>
+              <th> Tên mùa vụ</th>
+              <th>Diện tích / số lượng</th>
+              <th>Cây trồng / vât nuôi</th>
 
-            <th>thời gian bắt đầu</th>
-            <th>Ngày Kết thúc</th>
+              <th>thời gian bắt đầu</th>
+              <th>Ngày Kết thúc</th>
 
-            <th>Tiện ích</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.map((item, key) => (
-              <tr key={key}>
-                <td>{item.namePlan}</td>
-                <td>{item.area}</td>
-                <td>{item.tree}</td>
-                <td>{this._getDate(item.dateStart)}</td>
-                <td>{this._getDate(item.dateEnd)}</td>
+              <th>Tiện ích</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data &&
+              data.map((item, key) => (
+                <tr key={key} id="item-season">
+                  <td>{item.namePlan}</td>
+                  <td>{item.area}</td>
+                  <td>{item.tree}</td>
+                  <td>{this._getDate(item.dateStart)}</td>
+                  <td>{this._getDate(item.dateEnd)}</td>
 
-                <td>
-                  <i
-                    className="fas fa-user-cog"
-                    onClick={() => this.onHandleAdd(item.id)}
-                  ></i>
-                  &emsp;
-                  <Button
-                    variant="warning"
-                    onClick={() => this.onHandleEdit(item)}
-                  >
-                    Sửa
-                  </Button>
-                  <div id="edit">
-                    <div className="editInfo">
-                      <div className="close" onClick={this.onHandleClose}>
-                        +
-                      </div>
-                      <br />
-                      <br />
-                      <form
-                        onSubmit={this.onHandleUpdateSeason}
-                        className="season"
-                      >
-                        <div className="form-group row">
-                          <div className="col-sm-6 mb-3 mb-sm-0">
-                            <label>Tên mùa vụ</label>
-                            <input
-                              type="text"
-                              name="namePlan"
-                              className="name form-control form-control-user"
-                              id="exampleFNamePlan"
-                              value={this.state.namePlan}
-                              placeholder="Tên mùa vụ"
-                              onChange={this.onHandleChane}
-                              noValidate
-                            />
-                          </div>
-                          <div className="col-sm-6">
-                            <label>Diện tích / số lượng</label>
-
-                            <input
-                              name="area"
-                              type="number"
-                              className="area form-control form-control-user"
-                              id="exampleArea"
-                              value={this.state.area}
-                              placeholder="Diện tich"
-                              onChange={this.onHandleChane}
-                              noValidate
-                            />
-                          </div>
+                  <td>
+                    <i
+                      className="fas fa-user-cog"
+                      onClick={() => this.onHandleAdd(item.id)}
+                    ></i>
+                    &emsp;
+                    <Button
+                      variant="warning"
+                      onClick={() => this.onHandleEdit(item)}
+                    >
+                      Sửa
+                    </Button>
+                    <div id="edit">
+                      <div className="editInfo">
+                        <div className="close" onClick={this.onHandleClose}>
+                          +
                         </div>
-                        <div className="form-group row">
-                          <div className="col-sm-6 mb-3 mb-sm-0">
-                            <label>Cây trồng vật nuôi</label>
-
-                            <input
-                              type="text"
-                              name="loaiCay"
-                              className="loaiCay form-control form-control-user"
-                              id="exPhoneLoaiCay"
-                              value={this.state.loaiCay}
-                              placeholder="Loại cây trồng"
-                              noValidate
-                              onChange={this.onHandleChane}
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group row">
-                          <div className="col-sm-6 mb-3 mb-sm-0">
-                            <span>Ngày bắt đầu </span>
-                            <DatePicker
-                              className="form-control form-control-user"
-                              dateFormat="dd/MM/yyyy"
-                              locale="vi"
-                              selected={this.state.dateStart}
-                              onChange={(e) => this.handlePickerDate(e, 0)}
-                            />
-                          </div>
-                          <div className="col-sm-6 mb-3 mb-sm-0">
-                            <span>Ngày kết thúc </span>
-                            <DatePicker
-                              className="form-control form-control-user"
-                              dateFormat="dd/MM/yyyy"
-                              locale="vi"
-                              selected={this.state.dateEnd}
-                              onChange={(e) => this.handlePickerDate(e, 1)}
-                            />
-                          </div>
-                        </div>
-
-                        <button
-                          type="submit"
-                          className="buttom btn btn-primary btn-user btn-block"
+                        <br />
+                        <br />
+                        <form
+                          onSubmit={this.onHandleUpdateSeason}
+                          className="season"
                         >
-                          Sửa
-                        </button>
-                      </form>
+                          <div className="form-group row">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
+                              <label>Tên mùa vụ</label>
+                              <input
+                                type="text"
+                                name="namePlan"
+                                className="name form-control form-control-user"
+                                id="exampleFNamePlan"
+                                value={this.state.namePlan}
+                                placeholder="Tên mùa vụ"
+                                onChange={this.onHandleChane}
+                                noValidate
+                              />
+                            </div>
+                            <div className="col-sm-6">
+                              <label>Diện tích / số lượng</label>
+
+                              <input
+                                name="area"
+                                type="number"
+                                className="area form-control form-control-user"
+                                id="exampleArea"
+                                value={this.state.area}
+                                placeholder="Diện tich"
+                                onChange={this.onHandleChane}
+                                noValidate
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group row">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
+                              <label>Cây trồng vật nuôi</label>
+
+                              <input
+                                type="text"
+                                name="loaiCay"
+                                className="loaiCay form-control form-control-user"
+                                id="exPhoneLoaiCay"
+                                value={this.state.loaiCay}
+                                placeholder="Loại cây trồng"
+                                noValidate
+                                onChange={this.onHandleChane}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group row">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
+                              <span>Ngày bắt đầu </span>
+                              <DatePicker
+                                className="form-control form-control-user"
+                                dateFormat="dd/MM/yyyy"
+                                locale="vi"
+                                selected={this.state.dateStart}
+                                onChange={(e) => this.handlePickerDate(e, 0)}
+                              />
+                            </div>
+                            <div className="col-sm-6 mb-3 mb-sm-0">
+                              <span>Ngày kết thúc </span>
+                              <DatePicker
+                                className="form-control form-control-user"
+                                dateFormat="dd/MM/yyyy"
+                                locale="vi"
+                                selected={this.state.dateEnd}
+                                onChange={(e) => this.handlePickerDate(e, 1)}
+                              />
+                            </div>
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="buttom btn btn-primary btn-user btn-block"
+                          >
+                            Sửa
+                          </button>
+                        </form>
+                      </div>
                     </div>
-                  </div>
-                  &emsp;
-                  <Button
-                    variant="danger"
-                    onClick={() => this.onHandleDel(item)}
-                  >
-                    Xóa
-                  </Button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+                    &emsp;
+                    <Button
+                      variant="danger"
+                      onClick={() => this.onHandleDel(item)}
+                    >
+                      Xóa
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

@@ -134,7 +134,7 @@ class SignUp extends Component {
                   <div className="p-5">
                     <div className="text-center">
                       <h1 className="h4 text-gray-900 mb-4">
-                        Create an Account!
+                        Đăng Ký Tài Khoản!
                       </h1>
                     </div>
                     <form onSubmit={this.onHandleSubmit} className="user">
@@ -147,8 +147,7 @@ class SignUp extends Component {
                             id="exampleFirstName"
                             placeholder="First Name"
                             onChange={this.onHandleChane}
-                            // required="Caanf"
-
+                            autoComplete="disable"
                             noValidate
                           />
                           {formErrors.firstName.length > 0 && (
@@ -165,6 +164,7 @@ class SignUp extends Component {
                             id="exampleLastName"
                             placeholder="Last Name"
                             onChange={this.onHandleChane}
+                            autoComplete="disable"
                             noValidate
                           />
                           {formErrors.lastName.length > 0 && (
@@ -181,6 +181,7 @@ class SignUp extends Component {
                             name="phoneNumber"
                             className="form-control form-control-user"
                             id="exPhoneNumber"
+                            autoComplete="disable"
                             placeholder="Phone Number"
                             noValidate
                             onChange={this.onHandleChane}
@@ -194,6 +195,7 @@ class SignUp extends Component {
                             id="exAddress"
                             placeholder="Address"
                             noValidate
+                            autoComplete="disable"
                             onChange={this.onHandleChane}
                           />
                         </div>
@@ -252,18 +254,18 @@ class SignUp extends Component {
                         type="submit"
                         className="buttom btn btn-primary btn-user btn-block"
                       >
-                        Register Account
+                        Đăng Ký
                       </button>
                     </form>
                     <hr />
                     <div className="text-center">
                       <Link to={ROUTES.PASSWORD_FORGET} className="small">
-                        Forgot Password?
+                        Quên Mật khẩu?
                       </Link>
                     </div>
                     <div className="text-center">
                       <Link to={ROUTES.SIGN_IN} className="small">
-                        Already have an account? Login!
+                        Đã có tài khoản? Đăng nhập!
                       </Link>
                     </div>
                   </div>

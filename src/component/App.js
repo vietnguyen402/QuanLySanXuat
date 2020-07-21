@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       setIsSignedIn(!!user);
+
       setCheckedSignIn(true);
     });
     return () => unsubscribe();
@@ -26,18 +27,20 @@ function App() {
   return (
     <Router>
       <Switch>
-        <div className="App">
+        <React.Fragment key="App">
+          <Route path={ROUTES.SIGN_IN} component={SignIn} />
+
           <Route path={ROUTES.EDITANY} component={EditAny} />
           <Route path={ROUTES.SIGN_UP} component={SignUp} />
           <Route path={ROUTES.PASSWORD_FORGET} component={PwdForget} />
+
           <PrivateRoute
             isSignedIn={isSignedIn}
             exact={true}
             path={ROUTES.HOME}
             component={Home}
           />
-          <Route path={ROUTES.SIGN_IN} component={SignIn} />
-        </div>
+        </React.Fragment>
       </Switch>
     </Router>
   );
