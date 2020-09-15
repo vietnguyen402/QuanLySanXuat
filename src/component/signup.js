@@ -10,13 +10,13 @@ const emailRegex = RegExp(
 );
 
 ///check input valid
-const formValid = (formErrors) => {
-  let valid = true;
-  Object.values(formErrors).forEach((val) => {
-    val.length > 0 && (valid = false);
-  });
-  return valid;
-};
+// const formValid = (formErrors) => {
+//   let valid = true;
+//   Object.values(formErrors).forEach((val) => {
+//     val.length > 0 && (valid = false);
+//   });
+//   return valid;
+// };
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -75,51 +75,62 @@ class SignUp extends Component {
   };
   onHandleSubmit = (e) => {
     e.preventDefault();
+    alert("click signup");
     ///check valid
-    if (formValid(this.state.formErrors)) {
-      console.log(`submiting  firstName: ${this.state.firstName}
-      Email: ${this.state.email}Password: ${this.state.password}lastName: ${this.state.lastName}`);
-    } else {
-      console.error("FORM VALID");
-    }
+    // if (formValid(this.state.formErrors)) {
+    //   console.log(`submiting  firstName: ${this.state.firstName}
+    //   Email: ${this.state.email}Password: ${this.state.password}lastName: ${this.state.lastName}`);
+    // } else {
+    //   console.error("FORM VALID");
+    // }
+
     firebase
       .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((result) => {
-        if (result) {
-          // alert("account: " + result);
-          console.log(result);
-          //add info to firestore
-          const unSubscribeListener = firebase
-            .auth()
-            .onAuthStateChanged((user) => {
-              if (user)
-                firebase
-                  .firestore()
-                  .collection("users")
-                  .doc(user.uid)
-                  .set({
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    email: this.state.email,
-                    address: this.state.address,
-                    phoneNumber: this.state.phoneNumber,
-                  })
-                  .then(() => {
-                    unSubscribeListener();
-                    console.log("success: " + user.uid);
-                    alert("Đăng ký thành công ");
-                    window.location.replace(ROUTES.SIGN_IN);
-                  })
-                  .catch(console.warn);
-            });
-        } else {
-          console.log("0000Oop" + result);
-        }
+      .signInWithPhoneNumber("+84368367110", "invisible")
+      .then(() => {
+        alert("check code");
       })
-      .catch(function (e) {
-        alert("Oop " + e.message);
+      .catch((error) => {
+        alert(error.message);
       });
+    // firebase
+    //   .auth()
+    //   .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    //   .then((result) => {
+    //     if (result) {
+    //       // alert("account: " + result);
+    //       console.log(result);
+    //       //add info to firestore
+    //       const unSubscribeListener = firebase
+    //         .auth()
+    //         .onAuthStateChanged((user) => {
+    //           if (user)
+    //             firebase
+    //               .firestore()
+    //               .collection("users")
+    //               .doc(user.uid)
+    //               .set({
+    //                 firstName: this.state.firstName,
+    //                 lastName: this.state.lastName,
+    //                 email: this.state.email,
+    //                 address: this.state.address,
+    //                 phoneNumber: this.state.phoneNumber,
+    //               })
+    //               .then(() => {
+    //                 unSubscribeListener();
+    //                 console.log("success: " + user.uid);
+    //                 alert("Đăng ký thành công ");
+    //                 window.location.replace(ROUTES.SIGN_IN);
+    //               })
+    //               .catch(console.warn);
+    //         });
+    //     } else {
+    //       console.log("0000Oop" + result);
+    //     }
+    //   })
+    //   .catch(function (e) {
+    //     alert("Oop " + e.message);
+    //   });
   };
   render() {
     const { formErrors } = this.state;
